@@ -1098,7 +1098,7 @@ header ul a:hover {
 }
 @media screen and (max-width: 480px) {
       .container, section, header, footer {
-    width: 100%;
+    /* width: 100%; */
     overflow-x: hidden;
   }
     .hero .skills-video-box { display: none; }
