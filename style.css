@@ -1040,6 +1040,10 @@ header ul a:hover {
 
 
 @media screen and (max-width: 1200px) {
+      .container, section, header, footer {
+    width: 100%;
+    overflow-x: hidden;
+  }
     .blackhole-box video { margin-top: -20%; }
     .hero-info h1 { font-size: 40px; max-width: 400px; line-height: 40px; }
     .hero-info P { max-width: 300px; }
@@ -1054,6 +1058,10 @@ header ul a:hover {
     .contact-section .section-title { left: 30%; }
 }
 @media screen and (max-width: 700px) {
+      .container, section, header, footer {
+    width: 100%;
+    overflow-x: hidden;
+  }
     header { position: fixed; height: 50px; }
     header ul { display: none; }
     header .box-icons { display: none; }
@@ -1089,6 +1097,10 @@ header ul a:hover {
     .social-box { margin-left: -90px; }
 }
 @media screen and (max-width: 480px) {
+      .container, section, header, footer {
+    width: 100%;
+    overflow-x: hidden;
+  }
     .hero .skills-video-box { display: none; }
     .blackhole-box { overflow: hidden; }
     .blackhole-box video { width: 140%; margin-top: -27%; }
