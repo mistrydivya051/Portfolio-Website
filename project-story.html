@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Project Story | Divya Mistry</title>
+<link rel="stylesheet" href="../style.css">
+<link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet">
+<style>
+  /* ===== Reset & Base ===== */
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body {
+    font-family: 'Poppins', sans-serif;
+    line-height:1.6;
+    overflow-x:hidden;
+    perspective: 1200px;
+    background: linear-gradient(135deg, #0f0f30, #001f7c, #001f7c 80%);
+    background-size: 200% 200%;
+    animation: gradientShift 15s ease infinite;
+    color: #eee;
+    position: relative;
+  }
+  /* ===== Background Video ===== */
+#bg-video {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    z-index: -2; /* behind particles and content */
+    opacity: 0.35; /* adjust transparency to see particles */
+}
+.left {
+    display: flex;
+    align-items: center;
+}
+.left img {
+    width: 40px;
+    margin: 0 15px;
+}
+
+  a { text-decoration:none; color:inherit; }
+  button { cursor:pointer; padding:0.65rem 1.3rem; border:none; border-radius:8px; background:linear-gradient(90deg,#4a90e2,#357ABD); color:#fff; font-weight:500; font-size:1rem; transition:0.3s; }
+  button:hover { background:linear-gradient(90deg,#357ABD,#4a90e2); }
+
+  /* ===== Particle Canvas ===== */
+  #particle-canvas {
+    position: fixed;
+    top:0;
+    left:0;
+    width:100%;
+    height:100%;
+    z-index:0;
+    pointer-events:none;
+  }
+
+  /* ===== Header ===== */
+  header { display:flex; justify-content:space-between; align-items:center; padding:1rem 3rem; background: rgba(17,17,17,0.85); position: sticky; top:0; z-index:100; box-shadow:0 2px 6px rgba(0,0,0,0.5);}
+  header h1 { font-size:2rem; color:#72a1de; font-weight:600; }
+  header ul { display:flex; list-style:none; gap:25px; }
+  header ul li a { font-weight:500; color:#eee; transition:0.2s; }
+  header ul li a:hover { color:#4a90e2; }
+
+
+  /* ===== Responsive Navigation ===== */
+#menu-icon {
+  font-size: 2rem;
+  color: #72a1de;
+  display: none;
+  cursor: pointer;
+  transition: transform 0.3s ease;
+}
+
+#menu-icon.active {
+  transform: rotate(90deg);
+}
+
+  /* ===== Hero 3D ===== */
+  .project-hero { display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center; padding:4rem 2rem; border-bottom:2px solid rgba(255,255,255,0.1); position: relative; z-index:1; }
+  .video-card { display:inline-block; border-radius:15px; overflow:hidden; box-shadow:0 20px 60px rgba(0,0,0,0.6); transform-style: preserve-3d; transition: transform 0.2s ease-out; }
+  .project-hero video, .project-hero h1, .project-hero p { opacity:0; transform: translateY(30px); transition: all 0.8s ease-out; }
+  .project-hero video { width:100%; max-width:900px; border-radius:15px; margin-bottom:1.5rem; display:block; }
+  .project-hero h1 { font-size:2.5rem; color:#4a90e2; margin-bottom:1rem; }
+  .project-hero p { font-size:1.15rem; max-width:850px; color:#ccc; }
+
+  /* ===== Project Details Card ===== */
+  .project-details { padding:3rem 2rem; max-width:900px; margin:3rem auto; background: rgba(17,17,17,0.85); border-radius:12px; box-shadow:0 4px 30px rgba(0,0,0,0.7); transform-style: preserve-3d; transition: transform 0.2s ease-out, box-shadow 0.2s ease-out; position: relative; z-index:1; }
+  .project-details:hover { box-shadow: 0 40px 60px rgba(0,0,0,0.6); }
+  .project-details h2, .project-details p, .project-details .long-description { opacity:0; transform: translateY(20px); transition: all 0.8s ease-out; }
+  .project-details h2 { color:#4a90e2; margin-bottom:1.5rem; font-size:2rem; }
+  .project-details p { margin:0.8rem 0; font-size:1rem; color:#ccc; transform: translateZ(0); }
+  .project-details span { color:#aaa; }
+  .project-details a button { margin-top:1rem; }
+
+  /* ===== Animate classes ===== */
+  .fade-in { opacity:1 !important; transform: translateY(0) !important; }
+  .float-3d { transform: translateZ(20px) scale(1.02) !important; }
+
+  /* ===== Responsive ===== */
+  @media (max-width:768px) {
+      header {
+    flex-direction: row;
+    justify-content: space-between;
+    padding: 1rem 1.5rem;
+  }
+  #menu-icon {
+    display: block;
+  }
+
+  header ul {
+    position: absolute;
+    top: 70px;
+    right: 0;
+    width: 100%;
+    background: rgba(17,17,17,0.95);
+    flex-direction: column;
+    align-items: center;
+    gap: 1.2rem;
+    padding: 1.5rem 0;
+    transition: all 0.4s ease;
+    transform: translateY(-100%);
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  header ul.show {
+    transform: translateY(0);
+    opacity: 1;
+    pointer-events: auto;
+  }
+
+  header ul li a {
+    font-size: 1.1rem;
+  }
+    .project-hero h1 { font-size:2rem; }
+    .project-hero p { font-size:1rem; }
+    .project-details { padding:2rem 1rem; }
+  }
+
+  /* ===== Gradient Animation ===== */
+  @keyframes gradientShift {
+    0% { background-position:0% 50%; }
+    50% { background-position:100% 50%; }
+    100% { background-position:0% 50%; }
+  }
+</style>
+</head>
+<body>
+
+<!-- Background Video -->
+<video id="bg-video" autoplay muted loop playsinline>
+    <source src="./videos/galaxy.mp4" type="video/mp4">
+</video>
+    
+<canvas id="particle-canvas"></canvas>
+
+<header>
+  <div class="left">
+    <img src="./images/miladicode.png" alt="Logo">
+    <h1><span style="color: #72a1de8d;">Divya</span>Code</h1>
+  </div>
+
+  <i class='bx bx-menu' id="menu-icon"></i> <!-- hamburger icon -->
+
+  <ul id="nav-links">
+    <li><a href="./index.html">Home</a></li>
+    <li><a href="./index.html#projects">Projects</a></li>
+  </ul>
+</header>
+
+<section class="project-hero" id="hero-3d">
+    <div class="video-card">
+        <video id="project-video" autoplay loop muted playsinline></video>
+    </div>
+    <h1 id="project-title">Loading...</h1>
+    <p id="project-description"></p>
+</section>
+
+<section class="project-details" id="details-card">
+    <h2>Project Story</h2>
+    <p class="detail-line"><strong>Role:</strong> <span id="project-role"></span></p>
+    <p class="detail-line"><strong>Tech Stack:</strong> <span id="project-tech"></span></p>
+    <p class="detail-line"><strong>Features:</strong> <span id="project-features"></span></p>
+    <p class="detail-line"><strong>Challenges:</strong> <span id="project-challenges"></span></p>
+    <p class="detail-line"><strong>Outcome:</strong> <span id="project-outcome"></span></p>
+    <p class="long-description" id="project-long"></p>
+    <a id="project-live" target="_blank"><button><i class="bx bx-link-external"></i> Visit Live Site</button></a>
+    <a href="../index.html"><button><i class="bx bx-left-arrow-alt"></i> Back to Portfolio</button></a>
+</section>
+
+<script>
+/* ===== Project Data ===== */
+const projects = {
+    "carojewels": {
+        title: "Caro Jewels – Luxury E-Commerce",
+        description: "Caro Jewels is a luxury e-commerce website designed to showcase and sell fine diamond jewelry with a mobile-responsive layout and premium UX.",
+        role: "Full Stack Developer",
+        tech: "PHP, MySQL, Laravel, JavaScript, HTML, CSS",
+        features: "Shopping cart, Payment Gateway integration, Responsive Design, Admin panel",
+        challenges: "Ensuring smooth UX for high-value products and integrating secure payment APIs.",
+        outcome: "Increased online sales by 40% and improved customer engagement with interactive product displays.",
+        long: "Caro Jewels started as a vision to create a premium online diamond shopping experience. The project involved creating a responsive e-commerce platform, integrating secure payment gateways, designing interactive product galleries, and implementing an intuitive admin dashboard. Special focus was placed on delivering smooth user experiences on both desktop and mobile while maintaining high security for transactions.",
+        video: "../videos/carojewels.mp4",
+        live: "https://www.carojewels.in/"
+    },
+    "illusion-dental": {
+        title: "Illusion Dental Lab – Custom Dental Solutions",
+        description: "A platform for dental labs to manage patient records, orders, and custom dental products efficiently.",
+        role: "Full Stack Developer",
+        tech: "Laravel, JS, MySQL, Bootstrap",
+        features: "Patient dashboard, Order management, Notifications, Secure login",
+        challenges: "Managing sensitive patient data and seamless order tracking",
+        outcome: "Streamlined dental lab operations and reduced processing time by 50%",
+        long: "Illusion Dental Lab required a secure system for managing patient records and orders. I implemented a custom Laravel-based platform allowing dental technicians to track custom dental products, update patient details, and receive notifications. Emphasis was placed on data security, smooth order workflow, and providing a responsive dashboard that could be used on both desktops and tablets.",
+        video: "../videos/illusion_dental_lab.mp4",
+        live: "https://illusion-dental.example.com"
+    },
+    "lightab": {
+        title: "Lightab – Innovative Lighting Solutions",
+        description: "A modern platform for showcasing smart lighting products with interactive UI/UX.",
+        role: "Front-end Developer",
+        tech: "React, Node.js, CSS, MongoDB",
+        features: "Product showcase, Filter & search, Interactive demos",
+        challenges: "Real-time interactive demo for multiple lighting products",
+        outcome: "Enhanced product discovery and user engagement",
+        long: "Lightab focuses on modern lighting solutions with interactive product demos. I developed dynamic filtering and product showcasing features using React and Node.js. The project emphasizes real-time product interactions and responsiveness, allowing users to experience the lighting effects virtually before making decisions.",
+        video: "../videos/lightab.mp4",
+        live: "https://lightab.example.com"
+    }
+};
+
+/* ===== Load Project Data ===== */
+const urlParams = new URLSearchParams(window.location.search);
+const projectKey = urlParams.get('project');
+
+if(projects[projectKey]){
+    const data = projects[projectKey];
+    document.getElementById("project-title").innerText = data.title;
+    document.getElementById("project-description").innerText = data.description;
+    document.getElementById("project-role").innerText = data.role;
+    document.getElementById("project-tech").innerText = data.tech;
+    document.getElementById("project-features").innerText = data.features;
+    document.getElementById("project-challenges").innerText = data.challenges;
+    document.getElementById("project-outcome").innerText = data.outcome;
+    document.getElementById("project-long").innerText = data.long;
+    document.getElementById("project-video").src = data.video;
+    document.getElementById("project-live").href = data.live;
+
+    /* ===== Hero 3D tilt ===== */
+    const videoCard = document.querySelector('.video-card');
+    const hero3D = document.getElementById('hero-3d');
+    function applyHeroTilt(xDeg,yDeg){ videoCard.style.transform=`rotateY(${xDeg}deg) rotateX(${yDeg}deg)`; }
+    if(window.DeviceOrientationEvent){
+        window.addEventListener('deviceorientation', e=>{ const x=(e.gamma??0)/10; const y=(e.beta??0)/10; applyHeroTilt(x,-y); });
+    }
+    hero3D.addEventListener('mousemove', e=>{ const {width,height,left,top}=e.currentTarget.getBoundingClientRect(); const x=(e.clientX-left-width/2)/width; const y=(e.clientY-top-height/2)/height; applyHeroTilt(x*10,-y*10); });
+    hero3D.addEventListener('mouseleave', ()=>{ applyHeroTilt(0,0); });
+
+    /* ===== Details card 3D hover ===== */
+    const detailsCard = document.getElementById('details-card');
+    function applyDetailsTilt(xDeg,yDeg){ detailsCard.style.transform=`rotateY(${xDeg}deg) rotateX(${yDeg}deg) scale(1.02)`; }
+    if(window.DeviceOrientationEvent){
+        window.addEventListener('deviceorientation', e=>{ const x=(e.gamma??0)/15; const y=(e.beta??0)/15; applyDetailsTilt(x,-y); });
+    }
+    detailsCard.addEventListener('mousemove', e=>{ const {width,height,left,top}=detailsCard.getBoundingClientRect(); const x=(e.clientX-left-width/2)/width; const y=(e.clientY-top-height/2)/height; applyDetailsTilt(x*6,-y*6); });
+    detailsCard.addEventListener('mouseleave', ()=>{ applyDetailsTilt(0,0); });
+
+    /* ===== Staggered scroll animations ===== */
+    const heroElements=document.querySelectorAll('.project-hero video, .project-hero h1, .project-hero p');
+    const detailLines=document.querySelectorAll('.project-details .detail-line, .project-details .long-description');
+    const observer=new IntersectionObserver((entries,observer)=>{
+        entries.forEach(entry=>{
+            if(entry.isIntersecting){
+                heroElements.forEach((el,i)=>{ setTimeout(()=>{ el.classList.add('fade-in'); },i*150); });
+                detailLines.forEach((el,i)=>{ setTimeout(()=>{ el.classList.add('fade-in'); el.classList.add('float-3d'); },500+i*200); });
+                observer.disconnect();
+            }
+        });
+    },{threshold:0.1});
+    observer.observe(document.querySelector('.project-hero'));
+
+} else {
+    document.body.innerHTML = `<div style="text-align:center; padding:5rem;">
+        <h1>Project Not Found</h1>
+        <a href="../index.html"><button>Back to Portfolio</button></a>
+    </div>`;
+}
+
+/* ===== Particle Background ===== */
+const canvas=document.getElementById('particle-canvas');
+const ctx=canvas.getContext('2d');
+let w=canvas.width=window.innerWidth;
+let h=canvas.height=window.innerHeight;
+window.addEventListener('resize',()=>{ w=canvas.width=window.innerWidth; h=canvas.height=window.innerHeight; });
+
+const particles=[];
+const particleCount=60;
+for(let i=0;i<particleCount;i++){
+    particles.push({
+        x: Math.random()*w,
+        y: Math.random()*h,
+        r: Math.random()*3+1,
+        dx: (Math.random()-0.5)*0.3,
+        dy: (Math.random()-0.5)*0.3,
+        color: `rgba(255,255,255,${Math.random()*0.3+0.1})`
+    });
+}
+
+function animateParticles(){
+    ctx.clearRect(0,0,w,h);
+    particles.forEach(p=>{
+        p.x+=p.dx; p.y+=p.dy;
+        if(p.x> w) p.x=0; if(p.x<0) p.x=w;
+        if(p.y> h) p.y=0; if(p.y<0) p.y=h;
+        ctx.beginPath();
+        ctx.arc(p.x,p.y,p.r,0,Math.PI*2);
+        ctx.fillStyle=p.color;
+        ctx.fill();
+    });
+    requestAnimationFrame(animateParticles);
+}
+animateParticles();
+
+
+/* ===== Mobile Menu Toggle ===== */
+const menuIcon = document.getElementById('menu-icon');
+const navLinks = document.getElementById('nav-links');
+
+menuIcon.addEventListener('click', () => {
+  navLinks.classList.toggle('show');
+  menuIcon.classList.toggle('active');
+});
+
+/* Close menu when clicking a link (mobile UX) */
+navLinks.querySelectorAll('a').forEach(link => {
+  link.addEventListener('click', () => {
+    navLinks.classList.remove('show');
+    menuIcon.classList.remove('active');
+  });
+});
+
+</script>
+
+</body>
+</html>
